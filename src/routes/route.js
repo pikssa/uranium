@@ -3,9 +3,20 @@ const logger = require('./logger')
 
 const router = express.Router();
 //1
-router.get('/movies', function(req, res) {
-   let array = ["Matrix", "the shining", "lord of the rings", "bartman begins"]
-    res.send(array)
+router.get('/missing', function(req, res) {
+
+let array=[1,2,3,4,5,7,8,9]
+ let n=array.length+1
+ let sum = n*(n+1)/2 
+     let a=0
+ for(let i=0;i<array.length;i++)
+     {a=a+array[i]
+     }
+let axsum= Math.floor(sum)
+let b=axsum-a
+ console.log(b)
+
+    res.send(b.toString())
      
 
 })
