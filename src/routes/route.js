@@ -12,3 +12,5 @@ router.post("/createUser", UserController.createUser  )
 router.get("/getUsersData", UserController.getUsersData)
 
 module.exports = router;
+// mongodb+srv://lddu818:27o3D6VwW2z1zHMj@cluster0.6gomf.mongodb.net/test
+//mongodb+srv://lddu818:27o3D6VwW2z1zHMj@cluster0.6gomf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
