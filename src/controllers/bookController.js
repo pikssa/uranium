@@ -28,8 +28,13 @@ const createBook = async function (req, res) {
 //5.........................
 const updateBookData = async function (req, res) {
     //let kd = publisher_id.name
-    let check1 = await PublisherModel.findOne({name: "HarperCollins"}).select('_id')
-    let specificBook = await bookModel.updateMany({publisher_id : check1},{$set:{isHardCover:true}})
+    let check1 = await PublisherModel.find({$or:[{name:{$eq: 'HarperCollins'}},{name:{$eq:'Penguin'}}]}).select({_id:1})
+    let specificBook=null
+    let check2=null
+    for (let i=0;i<check1.length;i++){
+let check2=check1[i]._id
+ specificBook = await bookModel.updateMany({publisher_id : check2},{$set:{isHardCover:true}})
+}
     res.send({ data: specificBook })
 
 }
@@ -74,11 +79,6 @@ const createPublisher = async function (req, res) {
     res.send({ data: publisherCreated })
 }
 
-// module.exports.createAuthor = createAuthor
-// module.exports.getAuthorsData = getAuthorsData
 
-// module.exports.createBook = createBook
-// module.exports.getBooksData = getBooksData
-// module.exports.getBooksWithAuthorDetails = getBooksWithAuthorDetails
 
 module.exports ={ createPublisher,updateBookPrice,updateBookData,getBooksWithAuthorDetails,getBooksData,createBook,getAuthorsData,createAuthor} 
