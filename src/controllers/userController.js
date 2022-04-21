@@ -83,6 +83,12 @@ const updateUser = async function (req, res) {
 //5.............
 const deletUser = async function (req, res) {
   let userId = req.params.userId;
+
+  let user = await userModel.findById(userId);
+  //Return an error if no user with the given id exists in the db
+  if (!user) {
+    return res.send("No such user exists");
+  }
   let deleteUs = await userModel.findOneAndUpdate(userId, { $set: { isDeleted: true } })
   res.send({ status: true, deleteAccount: deleteUs })
 }
