@@ -10,6 +10,9 @@ const mid1 = function (req, res, next) {
   next()
 }
 
+
+
+
 const mid3 = async function (req, res, next) {
 try{
     let userId = req.params.userId;
@@ -22,14 +25,12 @@ try{
   catch(err){res.status(500).send({msg:"error",error:err.message})}
 }
 
-
-
 const mid4 = function (req, res, next) {
  try{ let userId = req.params.userId;
   let token = req.headers["x-auth-token"];
   let decodedToken = jwt.verify(token, "Pushpa")
   let userLoggedIn = decodedToken.userId
-  if (userId != userLoggedIn) { return res.status(403).send({ status: false, msg: 'User logged is not allowed to modify the requested users data' }) }
+  if (userId != userLoggedIn) { return res.status(401).send({ status: false, msg: 'User logged is not allowed to modify the requested users data' }) }
   next()}catch(err){res.status(500).send({msg:"error",error:err.message})}
 }
 

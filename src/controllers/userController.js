@@ -2,17 +2,15 @@ const res = require("express/lib/response");
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 //1.............
-const createUser = async function (abcd, xyz) {
+const createUser = async function (abc, xyz) {
 
   try {
-    let data = abcd.body;
-    let savedData = await userModel.create(data);
+    let data = abc.body;
+    let savedData = await userMode.create(data);
     
     xyz.status(201).send({ msg: savedData });
   }
-  catch (err) {
-    res.status(500).send({ msg: "error", error: err.message })
-  }
+  catch (err) {xyz.status(500).send({ msg: "error", error: err.message })}
 };
 
 //2..........
@@ -23,7 +21,7 @@ const loginUser = async function (req, res) {
 
     let user = await userModel.findOne({ emailId: userName, password: password });
     if (!user)
-      return res.status(401).send({
+      return res.status(400).send({
         status: false,
         msg: "username or the password is not corerct",
       });
