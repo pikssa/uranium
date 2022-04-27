@@ -14,7 +14,11 @@ router.post("/getAuthorsData", authorController.getAuthorsData)
 
 router.post("/createBlog", blogController.createBlog)
 
-// router.post("/getBlogData", blogController.getBlog)
+router.put("/blogs/:blogId", blogController.BlogById)
 
 router.get("/getBlogList", blogController.Bloglist)
+
+router.delete("/blog", blogController.updateBlogData)
+
+router.delete("/blog", blogController.deleteUserData)
 module.exports = router;
