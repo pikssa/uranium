@@ -16,6 +16,6 @@ router.get("/blogs", blogController.Bloglist)
 
 router.delete("/blog", blogController.updateBlogData)
 
-router.delete("/blog", blogController.deleteUserData)
+router.delete("/blog", blogController.deleteBlogData)
 
 module.exports = router;
