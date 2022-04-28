@@ -20,15 +20,15 @@ const createAuthor = async function (req, res) {
 
         if (!author.password) { return res.status(400).send({ status: false, message: "password is required" }) }
 
-        if (!valid(author.title)) { return res.status(400).send({ status: false, message: "title must be in string" }) }
+        if (!valid(author.title)) { return res.status(400).send({ status: false, message: "title is invalid" }) }
 
-        if (!["Mr", "Mrs", "Miss"].indexOf(author.title) !== -1) { return res.status(400).send({ status: false, message: "title should be Mr,Miss,Mrs" }) }
+        if (["Mr", "Mrs", "Miss"].indexOf(author.title)== -1) { return res.status(400).send({ status: false, message: "title should be Mr,Miss,Mrs" }) }
 
-        if (!valid(author.firstName)) { return res.status(400).send({ status: false, message: "author first name must be in string" }) }
+        if (!valid(author.firstName)) { return res.status(400).send({ status: false, message: "author first name is not valid" }) }
 
-        if (!valid(author.lastName)) { return res.status(400).send({ status: false, message: "author last name must be in string" }) }
+        if (!valid(author.lastName)) { return res.status(400).send({ status: false, message: "author last name must is not valid " }) }
 
-        if (!valid(author.password)) { return res.status(400).send({ status: false, message: "password name must be in string" }) }
+        if (!valid(author.password)) { return res.status(400).send({ status: false, message: "password name is not valid" }) }
 
 
         let pattern = /^[A-Za-z0-9._]{3,}@[A-Za-z]{3,}[.]{1}[A-Za-z.]{2,6}$/
@@ -37,7 +37,7 @@ const createAuthor = async function (req, res) {
 
         else {
             let authorCreated = await AuthorModel.create(author)
-            res.status(201).send({ data: authorCreated })
+            res.status(201).send({ status:true,data: authorCreated })
         }
     } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
 }

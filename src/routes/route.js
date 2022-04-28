@@ -12,7 +12,7 @@ router.post("/createBlog", blogController.createBlog)
 
 router.put("/blogs/:blogId", blogController.BlogById)
 
-router.get("/getBlogList", blogController.Bloglist)
+router.get("/blogs", blogController.Bloglist)
 
 router.delete("/blog", blogController.updateBlogData)
 

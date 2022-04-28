@@ -2,11 +2,13 @@ const blogModel = require("../models/blogModel")
 const authorModel = require("../models/authorModel")
 
 const moment = require('moment');
+
 const valid = function (value) {
     if (typeof value !== "string" || value.trim().length == 0
     ) { return false }
     return true
 }
+
 const createBlog = async function (req, res) {
     try {
         let blogData = req.body
@@ -20,19 +22,19 @@ const createBlog = async function (req, res) {
         if (!blogData.category) { return res.status(400).send({ status: false, message: "category is required" }) }
 
 
-        if (!valid(blogData.title)) { return res.status(400).send({ status: false, message: "title must be in string" }) }
+        if (!valid(blogData.title)) { return res.status(400).send({ status: false, message: "title is not valid" }) }
 
-        if (!valid(blogData.body)) { return res.status(400).send({ status: false, message: "body must be in string" }) }
+        if (!valid(blogData.body)) { return res.status(400).send({ status: false, message: "body is not valid" }) }
 
-        if (!valid(blogData.category)) { return res.status(400).send({ status: false, message: "category must be in string" }) }
+        if (!valid(blogData.category)) { return res.status(400).send({ status: false, message: "category is not valid" }) }
 
         let sub = blogData.subCategory
 
-        for (let i = 0; i < sub.length; i++) { if (!valid(sub[i])) { return res.status(400).send({ status: false, message: "subCategory must be in string" }) } }
+        for (let i = 0; i < sub.length; i++) { if (!valid(sub[i])) { return res.status(400).send({ status: false, message: "subCategory is not valid" }) } }
 
         let tag = blogData.tags
 
-        for (let i = 0; i < tag.length; i++) { if (!valid(tag[i])) { return res.status(400).send({ status: false, message: "tags must be in string" }) } }
+        for (let i = 0; i < tag.length; i++) { if (!valid(tag[i])) { return res.status(400).send({ status: false, message: "tags is not valid" }) } }
 
         if (typeof blogData.isPublished !== "boolean") { return res.status(400).send({ status: false, message: "value must be in boolean" }) }
         let Id = blogData.author_Id
@@ -47,7 +49,7 @@ const createBlog = async function (req, res) {
 
         req.body.publishedAt = req.body.isPublished ? moment().format('DD-MM-YYYY') : null
         let blogCreated = await blogModel.create(blogData)
-        res.status(201).send({ data: blogCreated })
+        res.status(201).send({status:true, data: blogCreated })
     } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
 
 
@@ -67,16 +69,15 @@ const Bloglist = async function (req, res) {
         let sub = req.query.subCategory
         let list = await blogModel.find({ isDeleted: false, isPublished: true })
         if (!list.length) { res.status(404).send({ status: false, msg: "blogs not found" }) }
-        if (!valid(category) || !valid(tag) || !valid(sub)) { return res.status(400).send({ status: false, message: "invalid value" }) }
-
-        else {
-            let bloglist = await blogModel.find({ $or: [{ author_Id: id }, { category: category }, { tags: tag }, { subCategory: sub }] })
+      
+         
+            let bloglist = await blogModel.find({isDeleted: false, isPublished: true ,$or: [{ author_Id: id }, { category: category }, { tags: tag }, { subCategory: sub }] })
             if (!bloglist.length) {
                 res.status(404).send({ status: false, msg: "blogs not found" })
             }
 
-            else { res.status(200).send({ status: true, data: list }) }
-        }
+            else { res.status(200).send({ status: true, data: bloglist }) }
+        
     } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
 
 }
