@@ -1,6 +1,6 @@
 // const authorModel = require("../models/authorModel")
 const AuthorModel = require("../models/authorModel")
-
+const jwt = require("jsonwebtoken")
 const valid = function (value) {
 
     if (typeof value !== "string" || value.trim().length == 0) { return false }
@@ -43,9 +43,25 @@ const createAuthor = async function (req, res) {
 }
 
 
+const authorLogIn = async function (req, res) {
+    let data1 = req.body.email;
+    let data2 = req.body.password;
+    if (!data1) { return res.status(400).send({ status: false, message: "email is required" }) }
+    if (!data2) { return res.status(400).send({ status: false, message: "password is required" }) }
+    let checkData = await AuthorModel.findOne({ email: data1, password: data2 });
+    if (!checkData) {
+        res.status(404).send({ status: false, msg: 'Invalid Credential' });
+    }
+    else {
+        let token = jwt.sign({ userId: checkData._id.toString() }, "functionUp");
+        res.setHeader("x-api-key",token);
+        res.setHeader("x-userId",checkData._id)
+        res.status(200).send({status:true,data:"logged in successfully"})
+        
+    }
+}
 
-
-
+module.exports.authorLogIn = authorLogIn;
 
 module.exports.createAuthor = createAuthor
 

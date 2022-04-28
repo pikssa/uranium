@@ -3,19 +3,22 @@ const router = express.Router();
 
 const authorController = require("../controllers/authorController")
 const blogController = require("../controllers/blogController")
-
+const Middleware=require("../middleware/auth")
 
 
 router.post("/createAuthor", authorController.createAuthor)
 
-router.post("/createBlog", blogController.createBlog)
+router.post("/createBlog",Middleware.authentication,Middleware.authorization, blogController.createBlog)
 
-router.put("/blogs/:blogId", blogController.BlogById)
+router.put("/blogs/:blogId",Middleware.authentication,Middleware.authorization, blogController.BlogById)
 
-router.get("/blogs", blogController.Bloglist)
+router.get("/getBlogList",Middleware.authentication, blogController.Bloglist)
 
-router.delete("/blog", blogController.updateBlogData)
+router.delete("/blogs",Middleware.authentication,Middleware.authorization, blogController.updateBlogData)
 
-router.delete("/blog", blogController.deleteBlogData)
+router.delete("/blog/:blogId",Middleware.authentication,Middleware.authorization,blogController.deleteBlogData)
 
 module.exports = router;
+
+
+//Middleware.authentication,Middleware.authorization,
