@@ -118,7 +118,7 @@ const BlogById = async function (req, res) {
                 else { list1.tags.push( blogData.tags[i]) }
             }
         }
-        let list = await blogModel.findOneAndUpdate({ _id: id, isDeleted: false} , {$set:{title: blogData.title, tags: list1.tags, subCategory: list1.subCategory, isPublished: true, publishedAt: new Date() }} , {new: true, upsert: true })
+        let list = await blogModel.findOneAndUpdate({ _id: id, isDeleted: false} , {$set:{title: blogData.title,body:blogData.body, tags: list1.tags, subCategory: list1.subCategory, isPublished: true, publishedAt: new Date() }} , {new: true, upsert: true })
 
         if (list == null) {
             res.status(404).send({ status: false, msg: "blog not found" })
