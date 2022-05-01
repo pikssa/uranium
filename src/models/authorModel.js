@@ -9,16 +9,18 @@ const authorSchema = new mongoose.Schema({
     },
     firstName: {
         type: String,
-        required: true
+        required: true,
+        trim:true
     },
     lastName: {
         type: String,
-        required: true
+        required: true,
+        trim:true
     },
     email: {
         type: String,
         unique: true,
-     
+        trim:true,
         required: true
     },
     password: {

@@ -4,7 +4,7 @@ const authorModel = require("../models/authorModel")
 const moment = require('moment');
 
 const valid = function (value) {
-    if (typeof value !== "string" || value.trim().length == 0) { return false }
+    if (typeof value !== "string" || value.trim().length == 0) { return false }  
     return true
 }
 
@@ -27,14 +27,16 @@ const createBlog = async function (req, res) {
 
         if (!valid(blogData.category)) { return res.status(400).send({ status: false, message: "category is not valid" }) }
 
-        let sub = blogData.subCategory
+        if ( blogData.subCategory) {
+            for (let i = 0; i <  blogData.subCategory.length; i++) {
+                if (!valid( blogData.subCategory[i])) { return res.status(400).send({ status: false, message: "subCategory is not valid" }) }} }
 
-        for (let i = 0; i < sub.length; i++) { if (!valid(sub[i])) { return res.status(400).send({ status: false, message: "subCategory is not valid" }) } }
+        if ( blogData.tags) {
+            for (let i = 0; i < blogData.tags.length; i++) {
+                if (!valid( blogData.tags[i])) { return res.status(400).send({ status: false, message: "tags is not valid" }) }}}
 
-        let tag = blogData.tags
-
-        for (let i = 0; i < tag.length; i++) { if (!valid(tag[i])) { return res.status(400).send({ status: false, message: "tags is not valid" }) } }
         if (blogData.isPublished) { if (typeof blogData.isPublished !== "boolean") { return res.status(400).send({ status: false, message: "value must be in boolean" }) } }
+        
         let Id = blogData.author_Id
 
         let pattern = /^[0-9A-Fa-f]{24}$/
@@ -67,10 +69,7 @@ const Bloglist = async function (req, res) {
         let sub = req.query.subCategory
         let list = await blogModel.find({ isDeleted: false, isPublished: true })
         if (!list.length) { res.status(404).send({ status: false, msg: "blogs not found" }) }
-        // if (!valid(category) ) { return res.status(400).send({ status: false, message: "invalid value" }) }
-        // if (!valid(tag) ) { return res.status(400).send({ status: false, message: "invalid value" }) }
-        // if (!valid(sub)) { return res.status(400).send({ status: false, message: "invalid value" }) }
-
+      
         let bloglist = await blogModel.find({ isDeleted: false, isPublished: true, $or: [{ author_Id: id }, { category: category }, { tags: tag }, { subCategory: sub }] })
         if (!bloglist.length) {
             res.status(404).send({ status: false, msg: "blogs not found" })
@@ -106,7 +105,7 @@ const BlogById = async function (req, res) {
         if ( blogData.subCategory) {
             for (let i = 0; i <  blogData.subCategory.length; i++) {
                 if (!valid( blogData.subCategory[i])) { return res.status(400).send({ status: false, message: "subCategory is not valid" }) }
-                else { list1.subCategory.push( blogData.subCategory[i]) }
+             
             }
 
         }
@@ -115,11 +114,10 @@ const BlogById = async function (req, res) {
             for (let i = 0; i < blogData.tags.length; i++) {
                 if (!valid( blogData.tags[i])) { return res.status(400).send({ status: false, message: "tags is not valid" }) }
 
-                else { list1.tags.push( blogData.tags[i]) }
+               
             }
         }
-        let list = await blogModel.findOneAndUpdate({ _id: id, isDeleted: false} , {$set:{title: blogData.title,body:blogData.body, tags: list1.tags, subCategory: list1.subCategory, isPublished: true, publishedAt: new Date() }} , {new: true, upsert: true })
-
+        let list = await blogModel.findOneAndUpdate({ _id: id, isDeleted: false} ,  {$addToSet: {tags: {$each:blogData.tags||[]},subcategory:{$each:blogData.subCategory||[]}},title: blogData.title, body: blogData.body,publishedAt: new Date(),isPublished: true},{new: true})
         if (list == null) {
             res.status(404).send({ status: false, msg: "blog not found" })
         }
@@ -141,20 +139,37 @@ const deleteBlogData = async function (req, res) {
         }
 
         let deleteUser = await blogModel.findOneAndUpdate({ _id: blogId }, { isDeleted: true }, { new: true })
-        res.status(200).send({ status: true, data: " " })
+        res.status(200).send({ status: true, data: "deleted succesfully" })
     } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
 
 }
 
 const updateBlogData = async function (req, res) {
-    try {
-        let blogData = req.query;
-        let deletedBlog = await blogModel.find({ blogData }).updateMany({ isDeleted: true }, { new: true });
-        if (!deletedBlog.length) { return res.status(404).send({ status: false, msg: "blog not found" }) }
-        res.status(200).send({ status: true, data: " " })
-    } catch (err) { return res.status(500).send({ status: false, msg: err.message }) }
 
-};
+
+
+    try {
+        const data = req.query
+        console.log(data)
+
+        if (!data) return res.status(400).send({ error: "Enter Valid Input " })
+
+        const dataforUpdation = { ...data, isDeleted:false, isDeletedAt:new Date() }
+
+        const result = await blogModel.updateMany(data, dataforUpdation, { new: true })
+
+        if (!result) res.status(404).send({ error: "No Data Found" })
+
+        res.status(200).send({ data: result })
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).send({ msg: err.message })
+    }
+}
+  
+
+
 
 
 module.exports.createBlog = createBlog

@@ -9,10 +9,7 @@ const authentication = function (req, res, next) {
         if (!token) {
             res.status(404).send({ status: false, msg: 'Token Mandatory' })
         }
-
         let decodedToken = jwt.verify(token, "functionUp")
-       
-
         next()
     }
     catch (error) {

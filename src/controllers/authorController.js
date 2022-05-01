@@ -46,9 +46,13 @@ const createAuthor = async function (req, res) {
 const authorLogIn = async function (req, res) {
     let data1 = req.body.email;
     let data2 = req.body.password;
+
     if (!data1) { return res.status(400).send({ status: false, message: "email is required" }) }
+
     if (!data2) { return res.status(400).send({ status: false, message: "password is required" }) }
+
     let checkData = await AuthorModel.findOne({ email: data1, password: data2 });
+    
     if (!checkData) {
         res.status(404).send({ status: false, msg: 'Invalid Credential' });
     }

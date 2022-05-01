@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { stringify } = require('nodemon/lib/utils');
 //const ObjectId = mongoose.Schema.Types.ObjectId
 
 const blogSchema = new mongoose.Schema({
@@ -26,6 +27,7 @@ const blogSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    isDeletedAt: String,
     isPublished: {
         type: Boolean,
         default: false
