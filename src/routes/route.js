@@ -8,17 +8,17 @@ const Middleware=require("../middleware/auth")
 
 router.post("/createAuthor", authorController.createAuthor)
 
+router.post("/login", authorController.authorLogIn)
+
 router.post("/createBlog",Middleware.authentication,Middleware.authorization, blogController.createBlog)
 
-router.put("/blogs/:blogId", Middleware.authentication,Middleware.authorization,blogController.BlogById)
-
 router.get("/getBlogList",Middleware.authentication, blogController.Bloglist)
+
+router.put("/blogs/:blogId", Middleware.authentication,Middleware.authorization,blogController.BlogById)
 
 router.delete("/blogs", Middleware.authentication,Middleware.authorization,blogController.updateBlogData)
 
 router.delete("/blog/:blogId",Middleware.authentication,Middleware.authorization,blogController.deleteBlogData)
-
-router.post("/login", authorController.authorLogIn)
 
 module.exports = router;
 

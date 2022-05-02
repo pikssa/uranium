@@ -1,6 +1,7 @@
 // const authorModel = require("../models/authorModel")
 const AuthorModel = require("../models/authorModel")
 const jwt = require("jsonwebtoken")
+
 const valid = function (value) {
 
     if (typeof value !== "string" || value.trim().length == 0) { return false }
@@ -59,7 +60,7 @@ const authorLogIn = async function (req, res) {
     else {
         let token = jwt.sign({ userId: checkData._id.toString() }, "functionUp");
         res.setHeader("x-api-key",token);
-        res.setHeader("x-userId",checkData._id)
+        // res.setHeader("x-userId",checkData._id)
         res.status(200).send({status:true,data:"logged in successfully"})
         
     }

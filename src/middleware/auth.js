@@ -27,7 +27,7 @@ const authorization = function (req, res, next) {
         let data2 = decodedToken.userId;
         console.log(data2)
         
-        let data1 = req.query.authorId
+        let data1 = req.headers["author_id"]
             console.log(data1)
             if(data1 !==data2){
                 return res.status(401).send({ status: false, msg: 'Unauthorized "Cannot access Other"s Data' })

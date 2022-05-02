@@ -5,7 +5,8 @@ const authorSchema = new mongoose.Schema({
     title: {
         type: String,
         enum: ['Mr', 'Mrs', 'Miss'],
-        required: true
+        required: true,
+        trim:true
     },
     firstName: {
         type: String,
